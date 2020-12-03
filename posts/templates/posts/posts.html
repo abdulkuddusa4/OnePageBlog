@@ -1,0 +1,9 @@
+{% extends 'posts/base.html' %}
+{% block content %}
+{{ block.super }}
+<div class="container col-lg-8 bg-primary" style="margin-top:50px;border-radius:10%;">
+    {% include 'posts/post-list.html' %}
+</div>
+
+
+{% endblock content %}

@@ -1,0 +1,19 @@
+{% load crispy_forms_tags %}
+<form action="" name="signup-form" onsubmit="return false;" id="signup-form">
+    {% csrf_token %}
+    {% if error_message %}
+    <h3 class="alert alert-danger">{{ error_message }}</h3>
+    {% endif %}
+    {{ signup_form|crispy }}
+    {% for field in signup_form %}
+<!--    <div class="form-group">-->
+<!--        <label for="{{ field.name }}" class="">{{ field.name }}</label>-->
+<!--        <input type="{{ field.widget_type }}" id="{{ field.auto_id }}" class="form-control" name="{{ field.name }}">-->
+<!--    </div>-->
+    {% endfor %}
+    <input type="hidden" data-dismiss="modal" class="btn btn-danger" value="close" id="signup_close_button">
+    <div class="col-lg-3" style="margin:auto;">
+        <button type="submit" class="btn btn-success margin-auto" id="signup_submit_button" onclick="signup_form_submit()">submit</button>
+    </div>
+</form>
+

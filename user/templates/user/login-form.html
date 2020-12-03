@@ -1,0 +1,10 @@
+{% load crispy_forms_tags %}
+<form action="" name="login_form" onsubmit="return my_submit() && 1==2;" id="login-form">
+    {% csrf_token %}
+    {% if error_message %}
+    <h3 class="alert alert-danger">{{ error_message }}</h3>
+    {% endif %}
+    {{ login_form | crispy }}
+    <input type="submit" class="btn btn-success" value="Login" id="submit">
+</form>
+

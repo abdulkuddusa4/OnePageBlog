@@ -1,0 +1,81 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<body>
+    {% if messages %}
+        {% for message in messages %}
+            <h3 class="alert alert-{{ message.tags }}" style="margin-bottom:1px">{{ message }}</h3>
+        {% endfor %}
+    {% endif %}
+    <nav class="navbar navbar-expand-lg bg-success">
+        <a href="{% url 'posts' %}" class="navbar-brand"></a>
+        <ul class="nav">
+            {% if user.is_active %}
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="modal" data-target="#addpostform" style="cursor:pointer" onclick="load_add_post_form()">
+                  Create Post
+                </a>
+                {% include 'posts/modal.html' %}
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'user-logout' %}" class="nav-link">Log Out</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-toggle="modal" data-target="#LoginForm" onclick="load_login_form()">Login</a>
+                <div class="modal modal-fade" id="LoginForm">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body" id="LoginModal">
+                                <div class="col-lg-7" style="margin:auto;">
+                                    <img src="{% static 'loading.gif' %}" alt="" style="max-width:100%">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-toggle="modal" data-target="#SignUpForm" id="signup_button">Sign Up</a>
+                <div class="modal modal-fade" id="SignUpForm">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body" id="SignUpModal">
+                                <div class="col-lg-7" style="margin:auto;">
+                                    <img src="{% static 'loading.gif' %}" alt="" style="max-width:100%">
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <div class="container">
+</div>
+    {% block content %}
+    {% endblock content %}
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="{% static 'custom_script.js' %}"></script>
+</body>
+</html>
