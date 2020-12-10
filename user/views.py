@@ -6,7 +6,16 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from .forms import LoginForm
 from django import forms
-from time import sleep
+from django import template
+
+message_list = """
+    {% if messages %}
+        {% for message in messages %}
+            <h3 class="alert alert-{{ message.tags }}" style="margin-bottom:1px">{{ message }}</h3>
+        {% endfor %}
+    {% endif %}
+    
+"""
 
 class Login(View):
     def get(self,request):
@@ -67,7 +76,9 @@ class CreateUser(View):
             print('true..........')
             # form.save()
             messages.success(request,"account created successfully.")
-            return redirect('posts')
+
+            # return redirect('posts')
+            return HttpResponse('1')
         else:
             print('false')
             print(form.error_messages)

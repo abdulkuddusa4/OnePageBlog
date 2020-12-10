@@ -63,7 +63,12 @@ function signup_form_submit(){
     },
     function(data,status){
         console.log(data)
-        $("#SignUpModal")[0].innerHTML = data;
+        if(data=="1"){
+            location = '/';
+        }
+        else{
+            $("#SignUpModal")[0].innerHTML = data;
+        }
 
     });
 }
