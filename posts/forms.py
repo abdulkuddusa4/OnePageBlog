@@ -17,19 +17,26 @@ class PostForm(forms.ModelForm):
         max_length=100,
         required=True,
         widget=forms.TextInput(
-        attrs={
-        'placeholder': 'please provide a meaningful title',
-        },
-            )
+            attrs={
+                'placeholder': 'please provide a meaningful title',
+                'class':'bg-input text-success',
+            },
         )
+    )
 
     short_description = forms.CharField(
         max_length=256,
+        widget=forms.TextInput(
+            attrs={
+                'class':'bg-input text-success'
+            }
+        )
     )
     description = forms.CharField(
         widget=forms.Textarea(
             attrs={
                 'rows': '5',
+                'class': 'bg-input text-success'
             }
         ),
     )

@@ -2,19 +2,21 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.views import View
 from django.contrib.auth import login,logout,authenticate
-from django.contrib.auth.forms import UserCreationForm
+from .forms import UserSignupForm as UserCreationForm
 from django.contrib import messages
 from .forms import LoginForm
-from django import forms
+from django.core.mail import send_mail
 from django import template
-
+from random import randint as ri
+from OnePageBlog import settings
+from django.contrib.auth.models import User
+NEXT_URL = None
 message_list = """
     {% if messages %}
         {% for message in messages %}
             <h3 class="alert alert-{{ message.tags }}" style="margin-bottom:1px">{{ message }}</h3>
         {% endfor %}
     {% endif %}
-    
 """
 
 class Login(View):
@@ -34,10 +36,14 @@ class Login(View):
             password = form.cleaned_data.get('password')
             user=authenticate(request,username=form.cleaned_data.get('username'),password=form.cleaned_data.get('password'))
             if user is not None:
-                login(request,user,)
-                return HttpResponse("true")
+                    # error_message = 'the email you provide with this account was not varified.please <a href={% url "verify-email" %} style="color:red;">click here</a> to varify your email account.'
+                    # my_t = template.Template(error_message).render(template.RequestContext(request))
+
+                    # messages.error(request,my_t,extra_tags='danger')
+                login(request,user)
+                return HttpResponse('true')
             else:
-                form.add_error('password',"password did'nt match")
+                form.add_error('password',"invalid password")
                 return render(request,'user/login-form.html',context)
             pass
         else:
@@ -46,12 +52,12 @@ class Login(View):
 
 class Logout(View):
     def get(self,request):
+        print('debug_logout',request.path)
         logout(request)
         return redirect('posts')
 
     def post(self,request):
-        logout(request)
-        return redirect('posts')
+        pass
     pass
 
 
@@ -64,17 +70,16 @@ class CreateUser(View):
 
     def post(self,request):
         form = UserCreationForm(request.POST)
+        print('ddd')
+        print(request.POST)
+        print('ddd')
         context = {
             'signup_form':form,
         }
-        print('******debug')
-        print(request.POST['username'])
-        print(request.POST['password1'])
-        print(request.POST['password2'])
-        print('******debug')
         if form.is_valid():
             print('true..........')
-            # form.save()
+            print(form.cleaned_data.get('email'))
+            form.save()
             messages.success(request,"account created successfully.")
 
             # return redirect('posts')
@@ -86,3 +91,33 @@ class CreateUser(View):
             # return render(request,'user/signup-form.html',context)
         pass
 
+
+class EmailVerify(View):
+    def get(self,request,url=None,msg=None):
+        # print('_____',request.path)
+        print(msg)
+        global NEXT_URL
+        if url is not None:
+            NEXT_URL = url
+
+        verification_code = ''.join(map(str,(ri(0,9),ri(0,9),ri(0,9),ri(0,9),ri(0,9),ri(0,9))))
+        request.session['verification_code'] = verification_code
+        msg = f'your email verification code is {verification_code}'
+        send_mail('verification code from onepageblog', msg,settings.EMAIL_HOST_USER,[request.user.email])
+        message = 'the email you provide with this account was not verified.First, please verify your email with the verification code we have send to <strong>{{ user.email }} </strong>in decimal number.'
+        my_t = template.Template(message).render(template.RequestContext(request))
+        messages.success(request,my_t,)
+        return render(request,'user/email-verification-page.html')
+
+    def post(self,request,url=None):
+        code = request.POST['email_verification_code']
+        print(code)
+        print(request.session['verification_code'])
+        if request.session['verification_code'] == code:
+            validationmodel = User.objects.get(username=request.user.username).emailvalidator
+            validationmodel.is_validate = True
+            validationmodel.save()
+            request.session.pop('verification_code')
+            return redirect('posts')
+        else:
+            return render(request, 'user/email-verification-page.html', {'msg': 'invalid code'})

@@ -1,5 +1,5 @@
 window.post_submit_value = 0;
-
+window.verification_value = '';
 function test_function(){
     console.log('test_function');
     return false;
@@ -58,6 +58,7 @@ function signup_form_submit(){
     {
         csrfmiddlewaretoken: form.csrfmiddlewaretoken.value,
         username: form.username.value,
+        email:form.email.value,
         password1: form.password1.value,
         password2: form.password2.value,
     },

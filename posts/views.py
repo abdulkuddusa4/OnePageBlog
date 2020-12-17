@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.views import View
 from django.http import HttpResponse
 from .models import Post
@@ -26,7 +26,6 @@ class CreatePost(View):
         context = {
             'add_post_form':form,
         }
-        sleep(1)
         return render(request,'posts/AddPostForm.html',context)
         pass
 
@@ -49,5 +48,5 @@ class CreatePost(View):
             print('error_block')
             form = template.Template(as_crispy_form(form)).render(template.RequestContext(request))
             return render(request,'posts/AddPostForm.html',{'add_post_form':form})
-            add_post_form = template.Template(as_crispy_form(PostForm())).render(template.RequestContext(request))
-            return render(request,'posts/AddPostForm.html',{'add_post_form':add_post_form})
+            # add_post_form = template.Template(as_crispy_form(PostForm())).render(template.RequestContext(request))
+            # return render(request,'posts/AddPostForm.html',{'add_post_form':add_post_form})

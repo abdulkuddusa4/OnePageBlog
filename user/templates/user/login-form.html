@@ -1,10 +1,12 @@
 {% load crispy_forms_tags %}
-<form action="" name="login_form" onsubmit="return my_submit() && 1==2;" id="login-form">
+<form action="" name="login_form" onsubmit="return my_submit() && 1==2;" id="login-form" class="form">
     {% csrf_token %}
     {% if error_message %}
     <h3 class="alert alert-danger">{{ error_message }}</h3>
     {% endif %}
     {{ login_form | crispy }}
-    <input type="submit" class="btn btn-success" value="Login" id="submit">
+    <div class="col-lg-5" style="margin:auto;">
+        <button type="submit" class="btn btn-success margin-auto button-success col-lg-12" id="signup_submit_button" onclick="signup_form_submit()">submit</button>
+    </div>
 </form>
 

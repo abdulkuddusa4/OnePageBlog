@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'posts',
-    'user',
+    'user.apps.UserConfig',
     'crispy_forms',
 ]
 
@@ -51,7 +51,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'posts.apps.MyMiddlewareOne',
+    'user.middleware.EmailValidationMiddleware'
+    # 'posts.apps.MyMiddleswareOne',
 ]
 
 ROOT_URLCONF = 'OnePageBlog.urls'
@@ -134,10 +135,13 @@ STATIC_ROOT = os.path.join(BASE_DIR,'static_root')
 
 # EMAIL SETTINGS
 
-#DataFlair
 EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'abdulkuddusa4@gmail.com'
-EMAIL_HOST_PASSWORD = '^24816326401820530963$'
+EMAIL_HOST_USER = 'onepageblog.pythonanywhere@gmail.com'
+EMAIL_HOST_PASSWORD = '##OnePageBlog##'
+
+
+#SESSION SETTINGS
+SESSION_ENGINE = 'django.contrib.sessions.backends.file'
