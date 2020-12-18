@@ -1,7 +1,6 @@
 from django.http import HttpResponse,HttpResponsePermanentRedirect
 from django.shortcuts import render,redirect,resolve_url
 from django.urls import resolve
-from user.views import EmailVerify
 from django.contrib import messages
 from django import template
 

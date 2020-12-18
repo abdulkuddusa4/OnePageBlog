@@ -92,21 +92,24 @@ class CreateUser(View):
 
 class EmailVerify(View):
     def get(self,request,url=None,msg=None):
-        # print('_____',request.path)
-        print(msg)
+
         global NEXT_URL
         if url is not None:
             NEXT_URL = url
+            pass
 
-        verification_code = ''.join(map(str,(ri(0,9),ri(0,9),ri(0,9),ri(0,9),ri(0,9),ri(0,9))))
-        request.session['verification_code'] = verification_code
-        msg = f'your email verification code is {verification_code}'
-        send_mail('verification code from onepageblog', msg,settings.EMAIL_HOST_USER,[request.user.email])
-        message = 'the email you provide with this account was not verified.First, please verify your email with the verification code we have send to <strong>{{ user.email }} </strong>in decimal number.'
-        my_t = template.Template(message).render(template.RequestContext(request))
-        messages.success(request,my_t,)
-        return render(request,'user/email-verification-page.html')
+        if not request.user.is_anonymous:
 
+            verification_code = ''.join(map(str,(ri(0,9),ri(0,9),ri(0,9),ri(0,9),ri(0,9),ri(0,9))))
+            request.session['verification_code'] = verification_code
+            msg = f'your email verification code is {verification_code}'
+            send_mail('verification code from onepageblog', msg,settings.EMAIL_HOST_USER,[request.user.email])
+            message = 'the email you provide with this account was not verified.First, please verify your email with the verification code we have send to <strong>{{ user.email }} </strong>in decimal number.'
+            my_t = template.Template(message).render(template.RequestContext(request))
+            messages.success(request,my_t,)
+            return render(request,'user/email-verification-page.html')
+        else:
+            return redirect(url)
     def post(self,request,url=None):
         code = request.POST['email_verification_code']
         print(code)
@@ -116,6 +119,6 @@ class EmailVerify(View):
             validationmodel.is_validate = True
             validationmodel.save()
             request.session.pop('verification_code')
-            return redirect('posts')
+            return redirect(url)
         else:
             return render(request, 'user/email-verification-page.html', {'msg': 'invalid code'})

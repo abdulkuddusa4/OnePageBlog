@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'b+*xn-&zx&te7tl(s&6ug5%^b5e@jb0*^xt-z*47u1b_h7dj5l'
+SECRET_KEY = 'b+*xn-&zx&te7tl(s&65%**b5e#jb0*^xt!z*47u1(b_h7dj5l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -52,7 +52,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'user.middleware.EmailValidationMiddleware'
-    # 'posts.apps.MyMiddleswareOne',
 ]
 
 ROOT_URLCONF = 'OnePageBlog.urls'
