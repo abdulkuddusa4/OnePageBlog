@@ -93,24 +93,47 @@ class CreateUser(View):
 class EmailVerify(View):
     def get(self,request,url=None,msg=None):
 
+
         global NEXT_URL
         if url is not None:
             NEXT_URL = url
             pass
-
-        if not request.user.is_anonymous:
-
-            verification_code = ''.join(map(str,(ri(0,9),ri(0,9),ri(0,9),ri(0,9),ri(0,9),ri(0,9))))
-            request.session['verification_code'] = verification_code
-            msg = f'your email verification code is {verification_code}'
-            send_mail('verification code from onepageblog', msg,settings.EMAIL_HOST_USER,[request.user.email])
-            message = 'the email you provide with this account was not verified.First, please verify your email with the verification code we have send to <strong>{{ user.email }} </strong>in decimal number.'
-            my_t = template.Template(message).render(template.RequestContext(request))
-            messages.success(request,my_t,)
-            return render(request,'user/email-verification-page.html')
+        if 'from_redirect_itself' not in request.session.keys():
+            request.session['from_redirect_itself'] = False
+        print('debug__*******')
+        print((request.session['from_redirect_itself']))
+        print('debug__*******')
+        if request.session['from_redirect_itself'] is True:
+            request.session.pop('from_redirect_itself')
+            return render(request,'user/email-verification-page.html',{'msg':'invalid code'})
         else:
-            return redirect(url)
+
+            if not request.user.is_anonymous:
+                if request.user.email and not request.user.emailvalidator.is_validate:
+                    message = 'the email you provide with this account was not verified.First, please verify your email with the verification code we have send to <strong>{{ user.email }} </strong>in decimal number.'
+                    verification_code = ''.join(map(str,(ri(0,9),ri(0,9),ri(0,9),ri(0,9),ri(0,9),ri(0,9))))
+                    request.session['verification_code'] = verification_code
+                    msg = f'your email verification code is {verification_code}'
+                    # send_mail('verification code from onepageblog', msg,settings.EMAIL_HOST_USER,[request.user.email])
+                    my_t = template.Template(message).render(template.RequestContext(request))
+                    messages.success(request,my_t,)
+                    return render(request,'user/email-verification-page.html')
+                else:
+                    message = "no email was attached with this account for email-verification"
+                    messages.success(request,message)
+                    if NEXT_URL:
+                        return redirect(NEXT_URL)
+                    else:
+                        return redirect('/')
+            else:
+                messages.success(request,'Sir, we need a logged in account for email-verification of that account')
+                if NEXT_URL:
+                    return redirect(NEXT_URL)
+                else:
+                    return redirect('posts')
+
     def post(self,request,url=None):
+        print('haha url',url)
         code = request.POST['email_verification_code']
         print(code)
         print(request.session['verification_code'])
@@ -119,6 +142,18 @@ class EmailVerify(View):
             validationmodel.is_validate = True
             validationmodel.save()
             request.session.pop('verification_code')
-            return redirect(url)
+            messages.success(request,'verification completed')
+            if NEXT_URL:
+                return redirect(NEXT_URL)
+            else:
+                return redirect('posts')
         else:
-            return render(request, 'user/email-verification-page.html', {'msg': 'invalid code'})
+            request.session['from_redirect_itself'] = True
+            # response =  render(request, 'user/email-verification-page.html', {'msg': 'invalid code'})
+            response = redirect('verify-email',url=NEXT_URL)
+            # print('debug_*******')
+            # response['Location'] = 'haha'
+            # response.url = property(lambda response: response['Location'])
+            # print(response['Location'])
+            # print('debug_*******')
+            return response

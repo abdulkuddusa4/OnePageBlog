@@ -49,7 +49,8 @@ class UserSignupForm(UserCreationForm):
             attrs={
                 'class': 'bg-input text-success',
             }
-        )
+        ),
+        required=False,
     )
     password1 = forms.CharField(
         widget=forms.PasswordInput(
