@@ -1,0 +1,32 @@
+.success-button{
+    background: #218838 !important;
+}
+.email-verification-form{
+    margin:50px auto;
+    background:#2db54c !important;
+    padding: 20px;
+    border-radius: 5%;
+
+}
+.form{
+    /**margin:50px auto;
+    padding: 20px;*/
+    background:#2db54c !important;
+    border-radius: 3%;
+}
+
+body{
+    background: #0080003d !important
+}
+.bg-input{
+    background:#dfffe6 !important
+}
+.no-padding{
+    padding:0px;
+}
+.no-margin{
+    margin:0px;
+}
+.full-radius{
+    border-radius:100%;
+}

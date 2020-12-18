@@ -1,5 +1,5 @@
 window.post_submit_value = 0;
-
+window.verification_value = '';
 function test_function(){
     console.log('test_function');
     return false;

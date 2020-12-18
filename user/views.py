@@ -32,8 +32,6 @@ class Login(View):
             'login_form': form
         }
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
             user=authenticate(request,username=form.cleaned_data.get('username'),password=form.cleaned_data.get('password'))
             if user is not None:
                     # error_message = 'the email you provide with this account was not varified.please <a href={% url "verify-email" %} style="color:red;">click here</a> to varify your email account.'
