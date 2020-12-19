@@ -21,13 +21,13 @@ from . import settings
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
 
-# handler404 = lambda request,exception:render(request,"posts/404.html",{'exception':exception})
-# handler400 = lambda request,exception:render(request,"posts/400.html",{'exception':exception})
-# handler500 = lambda request,exception:render(request,"posts/500.html",{'exception':exception})
+handler404 = lambda request,exception:render(request,"posts/404.html",{'exception':exception})
+handler400 = lambda request,exception:render(request,"posts/400.html",{'exception':exception})
+# handler500 = lambda request:render(request,"posts/500.html",{})
 
-handler404 = lambda request,exception:HttpResponseNotFound('lol')
-handler400 = lambda request,exception:HttpResponseNotFound('lol')
-handler500 = lambda request,exception:HttpResponseNotFound('lol')
+# handler404 = lambda request,exception:HttpResponseNotFound('lol')
+# handler400 = lambda request,exception:HttpResponseNotFound('lol')
+# handler500 = lambda request,exception:HttpResponseNotFound('lol')
 
 
 urlpatterns = [
