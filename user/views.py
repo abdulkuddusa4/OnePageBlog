@@ -109,15 +109,19 @@ class EmailVerify(View):
         else:
 
             if not request.user.is_anonymous:
-                if request.user.email and not request.user.emailvalidator.is_validate:
-                    message = 'the email you provide with this account was not verified.First, please verify your email with the verification code we have send to <strong>{{ user.email }} </strong>in decimal number.'
-                    verification_code = ''.join(map(str,(ri(0,9),ri(0,9),ri(0,9),ri(0,9),ri(0,9),ri(0,9))))
-                    request.session['verification_code'] = verification_code
-                    msg = f'your email verification code is {verification_code}'
-                    # send_mail('verification code from onepageblog', msg,settings.EMAIL_HOST_USER,[request.user.email])
-                    my_t = template.Template(message).render(template.RequestContext(request))
-                    messages.success(request,my_t,)
-                    return render(request,'user/email-verification-page.html')
+                if request.user.email:
+                    if not request.user.emailvalidator.is_validate:
+                        message = 'the email you provide with this account was not verified.First, please verify your email with the verification code we have send to <strong>{{ user.email }} </strong>in decimal number.'
+                        verification_code = ''.join(map(str,(ri(0,9),ri(0,9),ri(0,9),ri(0,9),ri(0,9),ri(0,9))))
+                        request.session['verification_code'] = verification_code
+                        msg = f'your email verification code is {verification_code}'
+                        send_mail('verification code from onepageblog', msg,settings.EMAIL_HOST_USER,[request.user.email])
+                        my_t = template.Template(message).render(template.RequestContext(request))
+                        messages.success(request,my_t,)
+                        return render(request,'user/email-verification-page.html')
+                    else:
+                        messages.success(request,'the email with this account was already verified')
+                        return redirect(NEXT_URL) if NEXT_URL else redirect('posts')
                 else:
                     message = "no email was attached with this account for email-verification"
                     messages.success(request,message)
@@ -133,27 +137,31 @@ class EmailVerify(View):
                     return redirect('posts')
 
     def post(self,request,url=None):
-        print('haha url',url)
-        code = request.POST['email_verification_code']
-        print(code)
-        print(request.session['verification_code'])
-        if request.session['verification_code'] == code:
-            validationmodel = User.objects.get(username=request.user.username).emailvalidator
-            validationmodel.is_validate = True
-            validationmodel.save()
-            request.session.pop('verification_code')
-            messages.success(request,'verification completed')
-            if NEXT_URL:
-                return redirect(NEXT_URL)
+        # if 'email_verification_code' in request.session.keys():
+
+            print('haha url',url)
+            code = request.POST['email_verification_code']
+            print(code)
+            print(request.session['verification_code'])
+            if request.session['verification_code'] == code:
+                validationmodel = User.objects.get(username=request.user.username).emailvalidator
+                validationmodel.is_validate = True
+                validationmodel.save()
+                request.session.pop('verification_code')
+                messages.success(request,'verification completed')
+                if NEXT_URL:
+                    return redirect(NEXT_URL)
+                else:
+                    return redirect('posts')
             else:
-                return redirect('posts')
-        else:
-            request.session['from_redirect_itself'] = True
-            # response =  render(request, 'user/email-verification-page.html', {'msg': 'invalid code'})
-            response = redirect('verify-email',url=NEXT_URL)
-            # print('debug_*******')
-            # response['Location'] = 'haha'
-            # response.url = property(lambda response: response['Location'])
-            # print(response['Location'])
-            # print('debug_*******')
-            return response
+                request.session['from_redirect_itself'] = True
+                # response =  render(request, 'user/email-verification-page.html', {'msg': 'invalid code'})
+                # print('debug_*******')
+                # response['Location'] = 'haha'
+                # response.url = property(lambda response: response['Location'])
+                # print(response['Location'])
+                # print('debug_*******')
+                return redirect('verify-email',url=NEXT_URL)
+        # else:
+        #     messages.success(request,'there is a n error. Maybe the session for this code has expired. Plese verify again with another code we have sent')
+        #     return redirect('verify-email',url=NEXT_URL)

@@ -16,12 +16,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from django.conf.urls import url
-from django.http import HttpResponse
 from django.conf.urls.static import static
 from . import settings
+from django.http import HttpResponseNotFound
+from django.shortcuts import render
 
-handler404 = lambda request,exception:HttpResponse("<h1>LOL :) ...404</h1>")
-handler400 = lambda request,exception:HttpResponse("<h1>LOL :) ...400</h1>")
+# handler404 = lambda request,exception:render(request,"posts/404.html",{'exception':exception})
+# handler400 = lambda request,exception:render(request,"posts/400.html",{'exception':exception})
+# handler500 = lambda request,exception:render(request,"posts/500.html",{'exception':exception})
+
+handler404 = lambda request,exception:HttpResponseNotFound('lol')
+handler400 = lambda request,exception:HttpResponseNotFound('lol')
+handler500 = lambda request,exception:HttpResponseNotFound('lol')
+
 
 urlpatterns = [
     url('^admin/', admin.site.urls),
