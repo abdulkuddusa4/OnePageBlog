@@ -57,6 +57,10 @@
                                 <div class="form">
                                     <div class="modal-header form">
                                         <h5>Place your credential correctly</h5>
+                                        <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+
                                     </div>
                                     <div class="modal-body form" id="LoginModal">
                                         <div class="" style="margin:auto;">
@@ -74,6 +78,12 @@
                     <div class="modal modal-fade" id="SignUpForm">
                         <div class="modal-dialog">
                             <div class="modal-content col-lg-10 no-padding full-radius">
+                                <div class="modal-header">
+                                    <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+
+                                </div>
                                 <div class="modal-body form" id="SignUpModal">
                                     <div class="col-lg-7" style="margin:auto;">
                                         <img src="{% static 'loading.gif' %}" alt="" style="max-width:100%">
